@@ -1,4 +1,8 @@
-﻿using System.Data.SqlClient;
+﻿using System.Collections;
+using System.Collections.Generic;
+using System.Data.SqlClient;
+using System.Text;
+using System.Xml.Linq;
 
 namespace ProjektBankomat
 {
@@ -42,7 +46,7 @@ namespace ProjektBankomat
             return isOpen;
         }
 
-        public List<string[]> Get(string columns, string tableName)
+        public List<string[]> Get(string tableName, string columns)
         {
             List<string[]> result = new List<string[]>();
             using (SqlConnection connection = new SqlConnection(connectionString))
@@ -79,5 +83,48 @@ namespace ProjektBankomat
             }
                 
         }
+        public void Update(string tableName, Dictionary<string, string> columns, int id, string primary_key)
+        {
+            StringBuilder setBuilder = new StringBuilder();
+
+            foreach (var item in columns)
+            {
+                setBuilder.Append(item.Key)
+                    .Append("=")
+                    .Append("'")
+                    .Append(item.Value)
+                    .Append("'")
+                    .Append(", ");
+            }
+
+            if (setBuilder.Length > 0)
+            {
+                setBuilder.Length -= 2;
+            }
+
+            string set = setBuilder.ToString();
+
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                try
+                {
+                    connection.Open(); 
+                    string query = $"UPDATE {tableName} SET {set} WHERE {primary_key} = {id};";
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+                        command.ExecuteNonQuery();
+                    }
+                    connection.Close();
+                }
+                catch
+                {
+                    return;
+                }
+            }
+
+
+        }
+
     }
 }

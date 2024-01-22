@@ -17,6 +17,12 @@ namespace ProjektBankomat
                 {
                     { "withdraw", "wypłata" },
                     { "deposit", "wpłata" },
+                    { "balance", "stan konta" },
+                    { "change language", "zmień język" },
+                    { "thank you", "dziękujemy" },
+                    { "", "błędny wybór" }
+
+
                 }
             },
             {
