@@ -43,5 +43,22 @@
                 Console.WriteLine($"Error: {ex.Message}");
             }
         }
+
+        public List<string[]> Insert(Dictionary<string, string> columns, string returnCol = "*")
+        {
+            try
+            {
+                if (database.TryConnect())
+                {
+                    return database.Insert(this.TableName, columns, this.PrimaryKey, returnCol);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
+
+            return null;
+        }
     }
 }

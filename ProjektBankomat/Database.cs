@@ -49,82 +49,114 @@ namespace ProjektBankomat
         public List<string[]> Get(string tableName, string columns)
         {
             List<string[]> result = new List<string[]>();
+
+            // Tworzenie połączenia z bazą danych
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                try
+                connection.Open();
+
+                // Wykonanie zapytania SQL
+                string query = $"SELECT {columns} FROM {tableName}";
+                using (SqlCommand command = new SqlCommand(query, connection))
+                using (SqlDataReader reader = command.ExecuteReader())
                 {
-                    connection.Open();
-                    string query = $"SELECT {columns} FROM {tableName}";
-                    using (SqlCommand command = new SqlCommand(query, connection))
+                    // Odczytywanie wyników zapytania
+                    while (reader.Read())
                     {
+                        string[] rowData = new string[reader.FieldCount];
+                        for (int i = 0; i < reader.FieldCount; i++)
                         {
-                            using (SqlDataReader reader = command.ExecuteReader())
-                            {
-                                while (reader.Read())
-                                {
-                                    string[] rowData = new string[reader.FieldCount];
-                                    for (int i = 0; i < reader.FieldCount; i++)
-                                    {
-                                        rowData[i] = reader[i].ToString();
-                                    }
-                                    result.Add(rowData);
-                                }
-                            }
+                            rowData[i] = reader[i].ToString();
                         }
+                        result.Add(rowData);
                     }
-                    connection.Close();
-                } 
-                catch
-                {
-                    return result;
                 }
 
-                return result;
+                connection.Close();
             }
-                
+
+            return result;
         }
+
+
         public void Update(string tableName, Dictionary<string, string> columns, int id, string primary_key)
         {
             StringBuilder setBuilder = new StringBuilder();
 
+            // Budowanie listy kolumn do aktualizacji
             foreach (var item in columns)
             {
                 setBuilder.Append(item.Key)
-                    .Append("=")
-                    .Append("'")
+                    .Append("='")
                     .Append(item.Value)
-                    .Append("'")
-                    .Append(", ");
+                    .Append("', ");
             }
 
             if (setBuilder.Length > 0)
             {
-                setBuilder.Length -= 2;
+                setBuilder.Length -= 2; // Usunięcie ostatniego przecinka
             }
 
             string set = setBuilder.ToString();
 
-
+            // Aktualizacja danych w bazie danych
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                try
+                connection.Open();
+
+                string query = $"UPDATE {tableName} SET {set} WHERE {primary_key} = {id};";
+                using (SqlCommand command = new SqlCommand(query, connection))
                 {
-                    connection.Open(); 
-                    string query = $"UPDATE {tableName} SET {set} WHERE {primary_key} = {id};";
-                    using (SqlCommand command = new SqlCommand(query, connection))
+                    command.ExecuteNonQuery();
+                }
+
+                connection.Close();
+            }
+        }
+
+
+        public List<string[]> Insert(string tableName, Dictionary<string, string> columns, string primary_key, string returnCol = "*")
+        {
+            List<string[]> result = new List<string[]>();
+
+            // Budowanie zapytania SQL
+            string cols = string.Join(", ", columns.Keys);
+            string values = string.Join(", ", columns.Values.Select(value => $"'{value}'"));
+
+            // Tworzenie połączenia z bazą danych
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+
+                // Wstawianie danych do tabeli
+                string query = $"INSERT INTO {tableName} ({cols}) VALUES ({values});";
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.ExecuteNonQuery();
+                }
+
+                // Pobieranie ostatnio wstawionego rekordu
+                string selectQuery = $"SELECT TOP 1 {returnCol} FROM {tableName} ORDER BY {primary_key} DESC;";
+                using (SqlCommand command = new SqlCommand(selectQuery, connection))
+                using (SqlDataReader reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
                     {
-                        command.ExecuteNonQuery();
+                        string[] rowData = new string[reader.FieldCount];
+                        for (int i = 0; i < reader.FieldCount; i++)
+                        {
+                            rowData[i] = reader[i].ToString();
+                        }
+                        result.Add(rowData);
                     }
-                    connection.Close();
                 }
-                catch
-                {
-                    return;
-                }
+
+                connection.Close();
             }
 
-
+            return result;
         }
+
 
     }
 }

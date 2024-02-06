@@ -21,30 +21,31 @@ namespace HelloWorld
 
 
             //Bank bank = new Bank();
+            //List<string[]> result = bank.Insert(new Dictionary<string, string>(){
+            //    {"nazwa_banku", "Nowy Adas"},
+            //    {"typ_banku", "Komercyjny45"},
+            //});
+
+            //Bank bank = new Bank();
             //bank.Update(new Dictionary<string, string>(){
-            //    {"nazwa_banku", "mBank2"},
-            //    {"typ_banku", "Komercyjny2"},
-            //}, 2);
-         
+            //    {"nazwa_banku", "Nowy Michas"},
+            //    {"typ_banku", "Komercyjny40"},
+            //}, 1039);
+
             //Banknote banknot = new Banknote();
             //Customer customer = new Customer();
             //Bank bank = new Bank();
-            ////Model model = new Model();
+
+            //Bank bank = new Bank();
             //List<string[]> result = bank.Get("nazwa_banku");
 
-            //foreach (string[] rowData in result)
+            //foreach (string[] rowdata in result)
             //{
-            //    foreach (string value in rowData)
+            //    foreach (string value in rowdata)
             //    {
             //        Console.WriteLine(value);
-            //        //Console.Write(value + "\t");
             //    }
-            //    //Console.WriteLine();
             //}
-
-
-
-
 
         }
     }
