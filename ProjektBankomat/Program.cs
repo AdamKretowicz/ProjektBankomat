@@ -1,11 +1,30 @@
 ﻿using ProjektBankomat;
+using System.Collections.Generic;
 
 namespace HelloWorld
 {
     class Program
     {
+      
         static void Main(string[] args)
         {
+            //(new Transaction()).Withdraw(100);
+
+            (new ATM()).Atm();
+
+            //Dictionary<int, int> result = (new Banknote()).Get("nominał, ilość").ToDictionary(arr => int.Parse(arr[0]), arr => int.Parse(arr[1]));
+
+            //Console.WriteLine(dictionary);
+
+            //foreach (var banknote in banknotes)
+            //{
+            //    foreach (string value in banknote)
+            //    {
+
+            //    }
+            //}
+
+
             //Login login = new Login();
             //login.Logging();
             ////Menu menu = new Menu();

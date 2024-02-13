@@ -10,16 +10,33 @@ namespace ProjektBankomat
     {
         public bool Logging() 
         {
+            Console.WriteLine("Podaj nr karty");
+            string nrKarty = Console.ReadLine();
+            bool successful = false;
+            List<string[]> customers = new List<string[]>();
+            string givenPin = null;
+
+            //nr_karty do testow
+            //3712904567890123
+
             int i = 3;
             while (i > 0)
             {
-
                 Console.WriteLine("Podaj PIN");
-                string correctPin = "1234";
-                string givenPin = Console.ReadLine();
-                if (givenPin == correctPin)
+                givenPin = Console.ReadLine();
+
+                customers = (new Customer()).Get("PIN", "nr_karty", nrKarty);
+
+                foreach (string[] rowdata in customers)
                 {
-                    Console.WriteLine("Poprawny PIN");
+                    foreach (string value in rowdata)
+                    {
+                        successful = givenPin == value;
+                    }
+                }
+
+                if (successful)
+                {
                     Console.Clear();
                     return true;
 

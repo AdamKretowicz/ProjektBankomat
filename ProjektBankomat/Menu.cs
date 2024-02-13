@@ -118,6 +118,12 @@ namespace ProjektBankomat
                     break;
             }
             Confirm(amount);
+
+            if (withdraw) {
+                (new Transaction()).Withdraw(amount);
+            } else {
+                (new Transaction()).Transfer(amount);
+            }
         }
         public void ChangeLanguageMenu()
         {
@@ -147,7 +153,6 @@ namespace ProjektBankomat
                 Environment.Exit(0);
             }
             Console.Clear();
-            Console.WriteLine("Wypłacono " + amount + " zł");
         }
 
     }

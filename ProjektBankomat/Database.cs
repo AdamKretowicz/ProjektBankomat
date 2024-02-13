@@ -46,7 +46,7 @@ namespace ProjektBankomat
             return isOpen;
         }
 
-        public List<string[]> Get(string tableName, string columns)
+        public List<string[]> Get(string tableName, string columns, string whereColumn, string whereValue)
         {
             List<string[]> result = new List<string[]>();
 
@@ -57,6 +57,10 @@ namespace ProjektBankomat
 
                 // Wykonanie zapytania SQL
                 string query = $"SELECT {columns} FROM {tableName}";
+                if (!string.IsNullOrEmpty(whereColumn) && !string.IsNullOrEmpty(whereValue))
+                {
+                    query = $"SELECT {columns} FROM {tableName} WHERE {whereColumn} = {whereValue};";
+                }
                 using (SqlCommand command = new SqlCommand(query, connection))
                 using (SqlDataReader reader = command.ExecuteReader())
                 {
@@ -79,7 +83,7 @@ namespace ProjektBankomat
         }
 
 
-        public void Update(string tableName, Dictionary<string, string> columns, int id, string primary_key)
+        public void Update(string tableName, Dictionary<string, string> columns, string whereColumn, int whereValue)
         {
             StringBuilder setBuilder = new StringBuilder();
 
@@ -104,7 +108,7 @@ namespace ProjektBankomat
             {
                 connection.Open();
 
-                string query = $"UPDATE {tableName} SET {set} WHERE {primary_key} = {id};";
+                string query = $"UPDATE {tableName} SET {set} WHERE {whereColumn} = {whereValue};";
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
                     command.ExecuteNonQuery();
